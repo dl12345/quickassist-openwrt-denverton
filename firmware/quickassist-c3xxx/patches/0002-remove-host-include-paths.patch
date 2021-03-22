@@ -1,7 +1,7 @@
-Index: quickassist-c3xxx-1.7/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
+Index: quickassist-c3xxx-1.7.L.4.13.0-00009/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
 ===================================================================
---- quickassist-c3xxx-1.7.orig/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
-+++ quickassist-c3xxx-1.7/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
+--- quickassist-c3xxx-1.7.L.4.13.0-00009.orig/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
++++ quickassist-c3xxx-1.7.L.4.13.0-00009/quickassist/build_system/build_files/env_files/linux_2.6_user_space.mk
 @@ -46,8 +46,7 @@
  #
  #-------------------------------------------------------------

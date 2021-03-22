@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=quickassist-c3xxx
 
 PKG_VERSION:=1.7
+PKG_MINOR_VERSION:=L.4.13.0-00009
 PKG_RELEASE:=1
 
-PKG_SOURCE_VERSION:=1.7.l.4.9.0-00008
-PKG_SOURCE:=qat$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_URL:=https://01.org/sites/default/files/downloads/
-PKG_HASH:=d0b789af37bd87636ae712ff39e1df38b446c75a15b07ba3f3e504e4cd524b7d
+PKG_SOURCE:=QAT$(PKG_VERSION).$(PKG_MINOR_VERSION).tar.gz
+PKG_SOURCE_URL:=https://downloadmirror.intel.com/30178/eng/
+PKG_HASH:=skip
 
 PKG_LICENSE:=GPL v3
 
@@ -35,7 +35,7 @@ QAT_ENV    = $(PKG_BUILD_DIR)/quickassist/build_system/build_files/env_files
 define Package/quickassist-c3xxx
   SECTION:=firmware
   CATEGORY:=Firmware
-  TITLE:=Intel Quick Assist Technology for c3xxx firmware
+  TITLE:=Intel Quick Assist Technology for c3xxx SoC
   DEPENDS:= \
 	$(QAT_DEFAULT_DEPENDS) \
 	$(PKG_DEFAULT_DEPENDS) \
@@ -56,7 +56,7 @@ define Package/quickassist-c3xxx
 endef
 
 define Package/quickassist-c3xxx/description
- Intel Quick Assist v1.7 drivers, utilities and firmware for c3xxx series SoCs
+ Intel Quick Assist v1.7 drivers and utilities for c3xxx series SoCs
 endef
 
 define Package/quickassist-c3xxx/config
@@ -165,6 +165,8 @@ MAKE_VARS += ICP_ROOT="$(PKG_BUILD_DIR)" \
 	LIB_SHARED_FLAGS="-L $(STAGING_DIR)/lib -L $(STAGING_DIR)/usr/lib" \
 	LD_LIBRARY_PATH="$(PKG_BUILD_DIR)/build" 
 
+#	ICP_DEFENSES_ENABLED="$(ICP_DEFENSES_ENABLED)" \
+
 define Build/Prepare
 	(mkdir -p '$(PKG_BUILD_DIR)' && zcat '$(DL_DIR)/$(PKG_SOURCE)' | tar -C '$(PKG_BUILD_DIR)' -xf -)
 	$(Build/Patch)
@@ -208,6 +210,23 @@ define Package/quickassist-c3xxx/install
 	$(CP) ./files/hotplug.d $(1)/etc
 	$(CP) ./files/sysctl.d $(1)/etc
 	$(CP) ./files/c3xxx_dev0.conf $(1)/etc/c3xxx_dev0.conf
+	$(CP) ./files/c3xxx_dev0.conf.multi $(1)/etc/c3xxx_dev0.conf.multi
+endef
+
+define Package/quickassist-c3xxx/postinst
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] && exit 0
+[ "$${PKG_UPGRADE}" = "1" ] && exit 0
+sysctl -p /etc/sysctl.d/12-hugepages.conf
+/etc/init.d/qat enable
+exit 0
+endef
+
+define Package/quickassist-c3xxx/prerm
+#!/bin/sh
+[ -n "$${IPKG_INSTROOT}" ] && exit 0
+/etc/init.d/qat stop
+exit 0
 endef
 
 $(eval $(call BuildPackage,quickassist-c3xxx))
