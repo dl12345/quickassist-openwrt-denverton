@@ -56,6 +56,13 @@ menu "Configuration"
 		help
 		Disable QAT HKDF offload
 
+	config QAT_ENGINE_ENABLE_GCM_CIPHERS
+		bool
+		default n
+		prompt "Enable QAT GCM offload"
+		help
+		Enable QAT GCM offload
+
 	config QAT_ENGINE_ENABLE_SMALL_PACKET
 		bool
 		default n
@@ -109,7 +116,7 @@ menu "Configuration"
 	config QAT_ENGINE_ENABLE_MULTITHREAD
 		bool
 		default n
-		prompt "Optimize for mult-threaded use"
+		prompt "Optimize for multi-threaded use"
 		help
 		This alternative method will give improved performance in a
 		multi-threaded environment by making the slab pools thread
